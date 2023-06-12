@@ -295,12 +295,12 @@ La consulta anterior devolverá los siguientes resultados:
 Por otro lado, la consulta de Jardinería devolverá los siguientes resultados:
 
 ```SQL
-+---------------+------------+----------------+-------+
-| codigo_pedido |fecha_pedido| nombre_cliente | total |
-+---------------+------------+----------------+-------+
-| 123           |
-| Producto B    |
-+---------------+
++---------------+------------+----------------+----------+
+| codigo_pedido |fecha_pedido| nombre_cliente |  total   |
++---------------+------------+----------------+----------+
+| 123           | 12/12/2023 | Alpaca         | 4534.56  |
+| 124           | 10/02/2023 | Almerimar      | 67876.32 |
++---------------+------------+----------------+----------+
 ```
 
 
