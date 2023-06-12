@@ -135,7 +135,7 @@ BEGIN
     [CONSULTA]
 END#
 ```
-### **Ejemplo de procedimiento sencillo**
+### **Ejemplo de procedimiento sencillo** ---> FALTA POR COMPLETAR
 
 ### **Ejemplo de uso con Triggers**
 *Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
@@ -143,14 +143,14 @@ END#
 # 💠Indices💠
 Un indice es una estructura de base de datos que optimiza las consultas por medio de un identificador único que se puede asignar a la fila de una tabla, permitiendo un rápido acceso a sus registros. Existen diferentes tipos de índices y diferentes formas de implementarlo en nuestra BDD.
 
-## Tipos de índices
+## **Tipos de índices**
 
 * Índices de clave primaria. Identifican de forma única una fila dentro de una tabla y no admiten valores nulos. Hacen uso de la palabra clave: ```PRIMARY KEY```
 * Índices de clave ajena. Este índice hace referencia a una columna que es clave primaria en otra tabla. Hacen uso de la palabra clave: ```FOREIGN KEY```
 * Índices únicos. Garantiza que los valores de una columna son únicos. Son similares a los índices de clave primaria, pero permiten valores nulos. Hacen uso de la palabra clave: ```UNIQUE```
 * Entre otros...
 
-### Creación de índices al crear la tabla
+### **Creación de índices al crear la tabla**
 
 Se pueden definir los índices en el momento de la creación de la tabla:
 
@@ -166,7 +166,7 @@ Se pueden definir los índices en el momento de la creación de la tabla:
 
 ```
 
-### Creación de índices después de crear la tabla
+### **Creación de índices después de crear la tabla**
 
 
 Es posible crear diferentes tipos de índices con la sentencia ```ALTER TABLE```:
@@ -181,7 +181,7 @@ También se puede omitir el nombre:
 ALTER TABLE empleado ADD UNIQUE INDEX (email);
 ```
 
-También es posible crear un ``ÍNDEX``` con su propio comando:
+También es posible crear un ```ÍNDEX``` con su propio comando:
 
 ```SQL
 CREATE UNIQUE INDEX precio_cli ON cliente (precio);
@@ -189,9 +189,34 @@ CREATE UNIQUE INDEX precio_cli ON cliente (precio);
 
 ### **Instrucciones adicionales**
 * ```SHOW INDEX```: muestra los índices de la BDD.
-* ```DESC```tabla: muestra los indices de una tabla en particular.
+* ```DESC tabla```: muestra los indices de una tabla en particular.
 
-### Ejemplo --> FALTA POR COMPLETAR
+*Ejemplo de ```DESCRIBE``` de la tabla Jardinería*
+
+```SQL
+DESCRIBE cliente;
+
++----------------------------+---------------+------+-----+---------+-------+
+| Field                      | Type          | Null | Key | Default | Extra |
++----------------------------+---------------+------+-----+---------+-------+
+| codigo_cliente             | int(11)       | NO   | PRI | NULL    |       |
+| nombre_cliente             | varchar(50)   | NO   |     | NULL    |       |
+| nombre_contacto            | varchar(30)   | YES  |     | NULL    |       |
+| apellido_contacto          | varchar(30)   | YES  |     | NULL    |       |
+| telefono                   | varchar(15)   | NO   |     | NULL    |       |
+| fax                        | varchar(15)   | NO   |     | NULL    |       |
+| linea_direccion1           | varchar(50)   | NO   |     | NULL    |       |
+| linea_direccion2           | varchar(50)   | YES  |     | NULL    |       |
+| ciudad                     | varchar(50)   | NO   |     | NULL    |       |
+| region                     | varchar(50)   | YES  |     | NULL    |       |
+| pais                       | varchar(50)   | YES  | MUL | NULL    |       |
+| codigo_postal              | varchar(10)   | YES  |     | NULL    |       |
+| codigo_empleado_rep_ventas | int(11)       | YES  | MUL | NULL    |       |
+| limite_credito             | decimal(15,2) | YES  |     | NULL    |       |
++----------------------------+---------------+------+-----+---------+-------+
+```
+
+### **Ejemplo** --> FALTA POR COMPLETAR
 
 Una vez creado el índice ejecutamos la consulta haciendo uso de ```MATCH``` y ```AGAINST```.
 ```SQL
@@ -200,6 +225,84 @@ FROM producto
 WHERE MATCH(nombre, descripcion) AGAINST ('acero');
 ```
 
-# 💠Vistas💠
+# 💠Vistas💠 ---> PROBAR QUE EL CODIGO FUNCIONA
+
+Una vista es una **tabla virtual** generada a partir de la ejecución de varias consultas sobre una o más tablas. Una vista tiene la misma estructura de filas y columnas que cualquier otra tabla MySQL y se almacenan del mismo modo.
+
+## Sintaxis
+
+```SQL
+CREATE VIEW nombre_vista
+[LISTA DE COLUMNAS]
+AS consulta
+```
+
+* nombre_vista: Representa el nombre de la tabla virtual.
+* lista_columnas: Es el listado de columnas que creará y contendrá la vista.
+* consulta: Se trata de una consulta ```SELECT``` que nos devolvuelven los datos que forman de la vista.
+
+### **¿Cual es la ventaja de usar vistas?**
+
+La mayor ventaja de utilizar vistas se obtiene en forma de **rendimiento**, ya que no estaremos generando constantemente una vista si ésta ya existe (al contrario de las tablas). Cuanto más complejas sean las consultas que se deben ejecutar para obtener la vista, mayor será la ganancia de rendimiento.  
+
+Por lo tanto, una vista en términos generales, puede ayudarte a construir una interfaz simplificada y abstracta a una base de datos compleja.
+
+### **Ejemplos**
+
+*Crea una vista para que liste el nombre de los productos con un precio inferior a 100 euros*
+
+```SQL
+CREATE VIEW productos_baratos
+AS SELECT precio 
+FROM producto 
+WHERE precio < 100;
+```
+
+*Crea una vista que muestre para cada uno de los pedidos, el código del pedido, la fecha, el nombre del cliente que realizó el pedido y el importe total del pedido.*
+
+```SQL
+CREATE OR REPLACE VIEW resumen_pedidos AS
+SELECT 
+    pedido.codigo_pedido,
+    pedido.fecha_pedido,
+    cliente.nombre_cliente,
+    SUM(detalle_pedido.cantidad * detalle_pedido.precio_unidad) AS total
+
+FROM cliente INNER JOIN pedido
+    ON cliente.codigo_cliente = pedido.codigo_cliente
+INNER JOIN detalle_pedido 
+    ON pedido.codigo_pedido = detalle_pedido.codigo_pedido
+GROUP BY pedido.codigo_pedido
+```
+
+**Cuando crees una vista**, podrás ejecutar consultas sobre ella como si de una tabla más se tratase. Por ejemplo:
+
+```SQL
+SELECT * FROM vistaProductosBarato;
+```
+
+La consulta anterior devolverá los siguientes resultados:
+
+```SQL
++------------+
+| nombre     |
++------------+
+| Producto A |
+| Producto B |
++------------+
+```
+
+Por otro lado, la consulta de Jardinería devolverá los siguientes resultados:
+
+```SQL
++---------------+------------+----------------+-------+
+| codigo_pedido |fecha_pedido| nombre_cliente | total |
++---------------+------------+----------------+-------+
+| 123           |
+| Producto B    |
++---------------+
+```
+
+
 
 # Ejemplo completo de ```TRIGGER``` <a name="trigger"></a>
