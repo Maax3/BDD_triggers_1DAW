@@ -139,8 +139,66 @@ END#
 
 ### **Ejemplo de uso con Triggers**
 *Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
+
 # 💠Indices💠
-Un indice es una estructura de base de datos que optimiza las consultas por medio de un identificador único que se puede asignar a la fila de una tabla, permitiendo un rápido acceso a sus registros.
+Un indice es una estructura de base de datos que optimiza las consultas por medio de un identificador único que se puede asignar a la fila de una tabla, permitiendo un rápido acceso a sus registros. Existen diferentes tipos de índices y diferentes formas de implementarlo en nuestra BDD.
+
+## Tipos de índices
+
+* Índices de clave primaria. Identifican de forma única una fila dentro de una tabla y no admiten valores nulos. Hacen uso de la palabra clave: ```PRIMARY KEY```
+* Índices de clave ajena. Este índice hace referencia a una columna que es clave primaria en otra tabla. Hacen uso de la palabra clave: ```FOREIGN KEY```
+* Índices únicos. Garantiza que los valores de una columna son únicos. Son similares a los índices de clave primaria, pero permiten valores nulos. Hacen uso de la palabra clave: ```UNIQUE```
+* Entre otros...
+
+### Creación de índices al crear la tabla
+
+Se pueden definir los índices en el momento de la creación de la tabla:
+
+```SQL
+    CREATE TABLE PRODUCTOS (
+        id_producto INTEGER AUTO_INCREMENT,
+        nombre VARCHAR(50),
+        precio DOUBLE NOT NULL,
+        PRIMARY KEY (id_producto),
+        UNIQUE (precio),
+        INDEX idx_nombre (nombre)
+    )
+
+```
+
+### Creación de índices después de crear la tabla
+
+
+Es posible crear diferentes tipos de índices con la sentencia ```ALTER TABLE```:
+
+```SQL
+ALTER TABLE cliente ADD INDEX idx_nombre (nombre);
+```
+
+También se puede omitir el nombre:
+
+```SQL
+ALTER TABLE empleado ADD UNIQUE INDEX (email);
+```
+
+También es posible crear un ``ÍNDEX``` con su propio comando:
+
+```SQL
+CREATE UNIQUE INDEX precio_cli ON cliente (precio);
+```
+
+### **Instrucciones adicionales**
+* ```SHOW INDEX```: muestra los índices de la BDD.
+* ```DESC```tabla: muestra los indices de una tabla en particular.
+
+### Ejemplo --> FALTA POR COMPLETAR
+
+Una vez creado el índice ejecutamos la consulta haciendo uso de ```MATCH``` y ```AGAINST```.
+```SQL
+SELECT *
+FROM producto
+WHERE MATCH(nombre, descripcion) AGAINST ('acero');
+```
 
 # 💠Vistas💠
 
