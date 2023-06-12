@@ -295,6 +295,10 @@ La consulta anterior devolverá los siguientes resultados:
 Por otro lado, la consulta de Jardinería devolverá los siguientes resultados:
 
 ```SQL
+SELECT * FROM resumen_pedido;
+```
+
+```SQL
 +---------------+------------+----------------+----------+
 | codigo_pedido |fecha_pedido| nombre_cliente |  total   |
 +---------------+------------+----------------+----------+
