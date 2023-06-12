@@ -1,9 +1,9 @@
 # Index
-🔷 [Triggers](#♣♦triggers♦♣)
-🔷 [Procedimientos](#procedimientos)
-🔷 [Indices](#indices)
-🔷 [Vistas](#vistas)
-🔷 [Ejemplo_Trigger](#trigger)
+🔷 [Triggers](#♣♦triggers♦♣) <br/>
+🔷 [Procedimientos](#procedimientos) <br/>
+🔷 [Indices](#indices) <br/>
+🔷 [Vistas](#vistas) <br/>
+🔷 [Ejemplo_Trigger](#trigger) <br/>
 
 # 🔻Triggers🔻 
 Los triggers son objetos que puedes crear en tu base de datos. Estos permiten **desencadenar *un evento* de forma automática** en la tabla a la cúal esten asociados. *En Java, por ejemplo, un evento es la acción que ocurre después de pulsar un botón.*
