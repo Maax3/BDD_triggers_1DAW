@@ -5,7 +5,7 @@
 🔷 [Vistas](#vistas)
 🔷 [Ejemplo_Trigger](#trigger)
 
-# ♣♦Triggers♦♣ 
+# 🔻Triggers🔻 
 Los triggers son objetos que puedes crear en tu base de datos. Estos permiten **desencadenar *un evento* de forma automática** en la tabla a la cúal esten asociados. *En Java, por ejemplo, un evento es la acción que ocurre después de pulsar un botón.*
 
 En nuestro caso, los triggers se pueden activar cuando: 
@@ -115,7 +115,7 @@ UPDATE producto SET precio=500 WHERE id_producto = 9;
 *La instrucción ```ALTER TRIGGER``` no existe, si se quiere modificar un trigger se debe borrar y crear de nuevo.*
 
 ---
-## Procedimientos 
+## 🔵Procedimientos 
 Un procedimiento consiste en crear un objeto que pueda almacenar instrucciones ```SQL```repetitivas. De esta forma, podemos crear una "consulta genérica" para las diferentes aplicaciones que usen la BDD ganando en eficiencia y seguridad. También puede servir para crear ```TRIGGERS``` más completos y complejos.
 
 Un procedimiento se crea con la sentencia ```CREATE PROCEDURE``` y se invoca con ```CALL```. Además, al igual que los metodos de Java puede tener 0, 1 o varios parámetros. 
@@ -139,8 +139,8 @@ END#
 
 ### **Ejemplo de uso con Triggers**
 *Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
-# Indices
+# 💠Indices💠
 
-# Vistas
+# 💠Vistas💠
 
 # Ejemplo completo de ```TRIGGER``` <a name="trigger"></a>
