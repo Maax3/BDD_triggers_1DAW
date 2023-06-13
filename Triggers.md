@@ -209,14 +209,13 @@ PRECIO DESPUÉS DE LA MODIFICACION:
 ![image.png](https://i.gyazo.com/15c48202bb469fb66dc06e1e60c5573b.png)
 
 # 💠Indices💠
-Un indice es una estructura de base de datos que optimiza las consultas por medio de un identificador único que se puede asignar a la fila de una tabla, permitiendo un rápido acceso a sus registros. Existen diferentes tipos de índices y diferentes formas de implementarlo en nuestra BDD.
+Un indice es una estructura de base de datos que permite realizar busquedas o consultas con mayor rapidez. Existen diferentes tipos de índices y diferentes formas de implementarlos en nuestra BDD.
 
 ## **Tipos de índices**
 
 * Índices de clave primaria. Identifican de forma única una fila dentro de una tabla y no admiten valores nulos. Hacen uso de la palabra clave: ```PRIMARY KEY```
-* Índices de clave ajena. Este índice hace referencia a una columna que es clave primaria en otra tabla. Hacen uso de la palabra clave: ```FOREIGN KEY```
 * Índices únicos. Garantiza que los valores de una columna son únicos. Son similares a los índices de clave primaria, pero permiten valores nulos. Hacen uso de la palabra clave: ```UNIQUE```
-* Entre otros...
+* Índices compuestos. Se forman con varias columnas y permiten valores nulos.
 
 ### **Creación de índices al crear la tabla**
 
@@ -255,6 +254,12 @@ También es posible crear un ```ÍNDEX``` con su propio comando:
 CREATE UNIQUE INDEX precio_cli ON cliente (precio);
 ```
 
+Por último, podemos crear un ```índex compuesto``` de varias columnas para evitar nombres duplicados. La clave evitará tener nombres | apellidos iguales y también permitirá dejar los campos vacios.
+
+```SQL
+CREATE UNIQUE INDEX myIndex ON empleado (nombre,apellido1,apellido2);
+```
+
 ### **Instrucciones adicionales**
 * ```SHOW INDEX```: muestra los índices de la BDD.
 * ```DESC tabla```: muestra los indices de una tabla en particular.
@@ -284,18 +289,8 @@ DESCRIBE cliente;
 +----------------------------+---------------+------+-----+---------+-------+
 ```
 
-### **Ejemplo** --> FALTA POR COMPLETAR
-
-Una vez creado el índice ejecutamos la consulta haciendo uso de ```MATCH``` y ```AGAINST```.
-```SQL
-SELECT *
-FROM producto
-WHERE MATCH(nombre, descripcion) AGAINST ('acero');
-```
-
 # 💠Vistas💠
 
-//PROBAR QUE EL CODIGO FUNCUIONA
 Una vista es una **tabla virtual** generada a partir de la ejecución de varias consultas sobre una o más tablas. Una vista tiene la misma estructura de filas y columnas que cualquier otra tabla MySQL y se almacenan del mismo modo.
 
 ## Sintaxis
@@ -330,7 +325,7 @@ WHERE precio < 100;
 *Crea una vista que muestre para cada uno de los pedidos, el código del pedido, la fecha, el nombre del cliente que realizó el pedido y el importe total del pedido.*
 
 ```SQL
-CREATE OR REPLACE VIEW resumen_pedidos AS
+CREATE VIEW resumen_pedidos AS
 SELECT 
     pedido.codigo_pedido,
     pedido.fecha_pedido,
@@ -371,8 +366,8 @@ SELECT * FROM resumen_pedido;
 +---------------+------------+----------------+----------+
 | codigo_pedido |fecha_pedido| nombre_cliente |  total   |
 +---------------+------------+----------------+----------+
-| 123           | 12/12/2023 | Alpaca         | 4534.56  |
-| 124           | 10/02/2023 | Almerimar      | 67876.32 |
+| 123           | 2023-12-20 | Alpaca         | 4534.56  |
+| 124           | 2020-02-15 | Almerimar      | 67876.32 |
 +---------------+------------+----------------+----------+
 ```
 
