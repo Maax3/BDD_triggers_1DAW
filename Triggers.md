@@ -1,5 +1,6 @@
 # Index
 🔷 [Triggers](#♣♦triggers♦♣) <br/>
+🔷 [Estructuras_de_Control](#estructuras-de-control) <br/>
 🔷 [Procedimientos](#procedimientos) <br/>
 🔷 [Indices](#indices) <br/>
 🔷 [Vistas](#vistas) <br/>
@@ -25,33 +26,28 @@ Su principal uso es la realización de tareas de mantenimiento y administración
     CREATE TRIGGER trigger_1 
     AFTER UPDATE  --> Cuando se ejecuta
     ON nombre_tabla FOR EACH ROW
-    [BEGIN 
+    BEGIN 
         *lo que hace trigger;* 
-    END$$]
-    [FOLLOWS] trigger_2
+    END$$
 
 [BEFORE OR AFTER] --> Se desencadena antes o después de un INSERT, DELETE o UPDATE.
 [INSERT, UPDATE, DELETE] --> Con que
 [FOR EACH ROW]: Indica que el trigger se repite por cada registro.
 [FOR EACH STATEMENT]: Indica que el trrigger se repite por cada sentencia SQL.
-[FOLLOWS OR PRECEDES] 
 ```
 
 1. En MySQL es imprescindible usar ```DELIMITER```.
 2. Se declara el nombre del trigger.
 3. Se establece cuando se va activar.
-4. Se define la tabla en la que se va ejecutrar y columnas afectadas.
+4. Se define la tabla en la que se va a ejecutar y las columnas afectadas.
 5. Se describe la acción del trigger que siempre comenzará con ```BEGIN``` y acabará con ```END```.
-6. Si fuera necesario, se pueden utilizar las palabras ```FOLLOWS``` o ```PRECEDES``` para concatenar triggers. Hay que indicar el nombre del nuevo trigger para que funcione.
-    * ```FOLLOWS```: Se ejecuta el trigger después del que has definido.
-    * ```PRECEDES```: Se ejecuta el trigger antes del que has definido.
 
-*Los delimitadores señalan el principio y el final de un trigger y puede ser cualquier signo que quieras establecer como: %%, ; $$...*
+*Los ```delimitadores``` señalan el principio y el final de un trigger y puede ser cualquier signo que quieras establecer como: %%, ; $$...*
 
 #### **SENTENCIAS ```OLD``` && ```NEW```**
 Permiten diferenciar y hacer referencia a los datos antiguos (OLD) y a los nuevos (NEW) dentro del trigger. 
 
-### **Ejemplo de uso con ```INSERT```**
+### **Ejemplo de trigger con ```INSERT```**
 
   *Primero se crea la tabla auxiliar donde se van a volcar/guardar los datos*
 
@@ -80,7 +76,7 @@ INSERT INTO `fabricante`(`nombre`) VALUES ('Apple');
 ```
 ![consulta0](https://i.gyazo.com/d8c66bc60c54950ed10ddee38a995739.png)
 
-### **Ejemplo de uso con ```UPDATE```**
+### **Ejemplo de trigger con ```UPDATE```**
 
 ```SQL
 CREATE TABLE info_producto (
@@ -114,31 +110,103 @@ UPDATE producto SET precio=500 WHERE id_producto = 9;
 * ```DROP TRIGGER```nombre_trigger: elimina el trigger.
 *La instrucción ```ALTER TRIGGER``` no existe, si se quiere modificar un trigger se debe borrar y crear de nuevo.*
 
----
+## 🔵Estructuras de Control
+
+En MySQL, existen varias estructuras de control que permiten realizar operaciones condicionales y repetitivas tanto en los triggers como en los procedimientos almacenados.
+
+### **Sintaxis**
+
+```Sentencia IF:``` Permite ejecutar una acción o un bloque si se cumple una condición. Por ejemplo:
+
+```SQL
+IF condición THEN
+    -- acciones a ejecutar si la condición es verdadera
+ELSE
+    -- acciones a ejecutar si la condición es falsa
+END IF;
+````
+
+```Sentencia CASE:``` (switch) Permite realizar evaluaciones condicionales múltiples y ejecutar diferentes acciones según el valor de una expresión. Por ejemplo:
+```SQL
+CASE expresión
+    WHEN valor1 THEN
+        -- acciones a ejecutar si la expresión es igual a valor1
+    WHEN valor2 THEN
+        -- acciones a ejecutar si la expresión es igual a valor2
+    ELSE
+        -- acciones a ejecutar si no se cumple ninguna condición anterior
+END;
+```
+
+```Bucles WHILE:``` Ejecuta una acción repetidamente mientras se cumple una condición específica. Por ejemplo:
+```SQL
+WHILE condición DO
+    -- acciones a ejecutar mientras se cumpla la condición
+END WHILE;
+```
+
+```Bucle REPEAT:``` Es el 'do while' de Java. El bloque de código se ejecuta al menos una vez. Por ejemplo:
+```SQL
+REPEAT
+    -- acciones a ejecutar
+UNTIL condición;
+```
+
+```Bucle FOR:``` Permite recorrer un rango de valores y ejecutar un bloque de código para cada valor. Por ejemplo:
+```SQL
+FOR variable IN rango DO
+    -- acciones a ejecutar para cada valor
+END FOR;
+```
+
 ## 🔵Procedimientos 
-Un procedimiento consiste en crear un objeto que pueda almacenar instrucciones ```SQL```repetitivas. De esta forma, podemos crear una "consulta genérica" para las diferentes aplicaciones que usen la BDD ganando en eficiencia y seguridad. También puede servir para crear ```TRIGGERS``` más completos y complejos.
+Un procedimiento consiste en crear un objeto que pueda almacenar instrucciones ```SQL```repetitivas. *En cristiano, un método de Java para consultas SQL.*
+
+Permite crear una "consulta genérica" para las diferentes aplicaciones que usen la BDD ganando en eficiencia y seguridad. También puede servir para crear ```TRIGGERS``` más completos y complejos.
 
 Un procedimiento se crea con la sentencia ```CREATE PROCEDURE``` y se invoca con ```CALL```. Además, al igual que los metodos de Java puede tener 0, 1 o varios parámetros. 
 
 ### **Parámetros de entrada, salida y entrada/salida**
 En los procedimientos podemos tener tres tipos de palabras clave que definimos antes del parametro:
-* Entrada ```IN```: Parámetros que no cambian su valor. Se considera paso por valor.
-* Salida ```OUT```: Estos parámetros pueden cambiar su valor dentro del procedimiento. En programación sería equivalente al paso por referencia.
-* Entrada/Salida: Combinación de los tipos ```IN``` y ```OUT```.
 
-### Sintaxis
+```IN:``` Parámetros que no cambian su valor. Se considera paso por valor.
+```OUT:``` Estos parámetros pueden cambiar su valor dentro del procedimiento. En programación sería equivalente al paso por referencia.
+```INOUT:``` Combinación de los tipos IN y OUT que nos permite modificar la variable a nuestro antojo.
+
+### **Sintaxis**
 ```SQL
 DELIMITER #
-CREATE PROCEDURE nombre_metodo
-([IN,OUT,IN/OUT] definicion de variables)
+CREATE PROCEDURE nombre_metodo(par*)
 BEGIN
     [CONSULTA]
 END#
 ```
-### **Ejemplo de procedimiento sencillo** ---> FALTA POR COMPLETAR
+### **Ejemplo de procedimiento**
+```SQL
+DELIMITER $$
+CREATE PROCEDURE actualizarPrecio (INOUT precioPrd double, id int)
+BEGIN
+	IF precioPrd < 0 THEN 
+        	SET precioPrd = (SELECT precio FROM producto WHERE id_producto = id);
+    END IF;
+    
+    UPDATE producto SET precio = precioPrd
+    WHERE id_producto = id;
+END$$
+```
+*Llamamos al procedimiento...*
+```SQL
+CALL actualizarPrecio(nuevoPrecio,id);
+```
 
-### **Ejemplo de uso con Triggers**
-*Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
+PRECIO DEL ```IPHONE X``` ANTES DE LA MODIFICACION:
+
+![alt1](https://i.gyazo.com/768f943524b94f95c36ae320aed0c579.png)
+<br/>
+
+PRECIO DESPUÉS DE LA MODIFICACION:
+![image.png](https://i.gyazo.com/f5ec82ea2de7cbf32c3ebd5660d434bc.png)
+![image.png](https://i.gyazo.com/15c48202bb469fb66dc06e1e60c5573b.png)
 
 # 💠Indices💠
 Un indice es una estructura de base de datos que optimiza las consultas por medio de un identificador único que se puede asignar a la fila de una tabla, permitiendo un rápido acceso a sus registros. Existen diferentes tipos de índices y diferentes formas de implementarlo en nuestra BDD.
@@ -225,8 +293,9 @@ FROM producto
 WHERE MATCH(nombre, descripcion) AGAINST ('acero');
 ```
 
-# 💠Vistas💠 ---> PROBAR QUE EL CODIGO FUNCIONA
+# 💠Vistas💠
 
+//PROBAR QUE EL CODIGO FUNCUIONA
 Una vista es una **tabla virtual** generada a partir de la ejecución de varias consultas sobre una o más tablas. Una vista tiene la misma estructura de filas y columnas que cualquier otra tabla MySQL y se almacenan del mismo modo.
 
 ## Sintaxis
@@ -310,3 +379,5 @@ SELECT * FROM resumen_pedido;
 
 
 # Ejemplo completo de ```TRIGGER``` <a name="trigger"></a>
+
+*Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
