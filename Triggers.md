@@ -1,10 +1,31 @@
 
-🔷 1. [Triggers](#🔻1.Triggers🔻) <br/>
-🔷 2. [Estructuras de Control](#2💠estructuras-de-control💠) <br/>
-🔷 3. [Procedimientos](#3💠procedimientos💠) <br/>
-🔷 4. [Índices](#4💠índices💠) <br/>
-🔷 5. [Vistas](#5💠vistas💠) <br/>
-🔷 6. [Ejemplo Trigger](#6💠ejemplo-completo-de-trigger-💠) <br/>
+1. [Triggers](#🔻1.Triggers🔻) 
+    * [Casos de uso](#12-casos-de-uso)
+    * [Sintaxis](#13-sintaxis)
+    * [Sentencias OLD/NEW](#14-sentencias-old--new)
+    * [Ejemplo 1](#ejemplo-de-trigger-con-insert)
+    * [Ejemplo 2](#ejemplo-de-trigger-con-update)
+    * [Instrucciones adicionales](#15-instrucciones-adicionales)
+2. [Estructuras de Control](#2💠estructuras-de-control💠)
+   * [Sintaxis](#21-sintaxis)
+3. [Procedimientos](#3💠procedimientos💠)
+   * [Parametros](#31-parámetros-de-entrada-salida-y-entradasalida)
+   * [Sintaxis](#32-sintaxis)
+   * [Ejemplo 1](#33-ejemplo-de-creación-de-una-variable-con-default)
+   * [Ejemplo 2](#34-ejemplo-de-procedimiento)
+4. [Índices](#4💠índices💠)
+    * [Tipos](#41-tipos-de-índices)
+    * [Modos de crear índices 1](#42-creación-de-índices-al-crear-la-tabla)
+    * [Modos de crear índices 2](#43-creación-de-índices-después-de-crear-la-tabla)
+    * [Instrucciones adicionales](#44-instrucciones-adicionales)
+5. [Vistas](#5💠vistas💠)
+    * [Sintaxis](#51-sintaxis)
+    * [Ventajas de las vistas](#52-¿cual-es-la-ventaja-de-usar-vistas)
+    * [Ejemplos](#53-ejemplos)
+6. [Ejemplo Trigger](#6💠ejemplo-completo-de-trigger-💠)
+    * [Creacion de nuevas columnas](#61-modificación-de-la-tabla)
+    * [Creacion del trigger](#62-creamos-el-trigger)
+    * [Pruebas](#63-consultas-de-prueba)
 
 
 
@@ -178,7 +199,7 @@ END#
 * Para asignar una nueva variable usaremos: ```DECLARE nombre_var```.
 * Para asignar un valor a una variable usaremos podemos usar ```SET nombre_var``` o ```TIPO_DATO DEFAULT valor```.
 
-####  3.3 Ejemplo de creación de una variable con ```DEFAULT```
+###  3.3 Ejemplo de creación de una variable con ```DEFAULT```
 ```SQL
 CREATE PROCEDURE ejemplo_txt()
     BEGIN
