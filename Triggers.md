@@ -42,7 +42,7 @@ Su principal uso es la realización de tareas de mantenimiento y administración
 4. Se define la tabla en la que se va a ejecutar y las columnas afectadas.
 5. Se describe la acción del trigger que siempre comenzará con ```BEGIN``` y acabará con ```END```.
 
-*Los ```delimitadores``` señalan el principio y el final de un trigger y puede ser cualquier signo que quieras establecer como: %%, ; $$...*
+*La palabra reservada ```DELIMITER``` señala el principio y el final de **un bloque de instrucciones** puede ser cualquier signo que quieras establecer como: %%, ; $$...*
 
 #### **SENTENCIAS ```OLD``` && ```NEW```**
 Permiten diferenciar y hacer referencia a los datos antiguos (OLD) y a los nuevos (NEW) dentro del trigger. 
@@ -114,9 +114,9 @@ UPDATE producto SET precio=500 WHERE id_producto = 9;
 
 En MySQL, existen varias estructuras de control que permiten realizar operaciones condicionales y repetitivas tanto en los triggers como en los procedimientos almacenados.
 
-### **Sintaxis**
+### Sintaxis
 
-```Sentencia IF:``` Permite ejecutar una acción o un bloque si se cumple una condición. Por ejemplo:
+{```Condicional IF```} ::  Permite ejecutar una acción o un bloque si se cumple una condición. Por ejemplo:
 
 ```SQL
 IF condición THEN
@@ -124,35 +124,26 @@ IF condición THEN
 ELSE
     -- acciones a ejecutar si la condición es falsa
 END IF;
-````
-
-```Sentencia CASE:``` (switch) Permite realizar evaluaciones condicionales múltiples y ejecutar diferentes acciones según el valor de una expresión. Por ejemplo:
-```SQL
-CASE expresión
-    WHEN valor1 THEN
-        -- acciones a ejecutar si la expresión es igual a valor1
-    WHEN valor2 THEN
-        -- acciones a ejecutar si la expresión es igual a valor2
-    ELSE
-        -- acciones a ejecutar si no se cumple ninguna condición anterior
-END;
 ```
 
-```Bucles WHILE:``` Ejecuta una acción repetidamente mientras se cumple una condición específica. Por ejemplo:
+{```Bucle WHILE```} ::  Ejecuta una acción repetidamente mientras se cumple una condición específica. Por ejemplo:
+
 ```SQL
 WHILE condición DO
     -- acciones a ejecutar mientras se cumpla la condición
 END WHILE;
 ```
 
-```Bucle REPEAT:``` Es el 'do while' de Java. El bloque de código se ejecuta al menos una vez. Por ejemplo:
+{```Bucle REPEAT```} ::  Es el do while de Java. El bloque de código se ejecuta al menos una vez. Por ejemplo:
+
 ```SQL
 REPEAT
     -- acciones a ejecutar
 UNTIL condición;
 ```
 
-```Bucle FOR:``` Permite recorrer un rango de valores y ejecutar un bloque de código para cada valor. Por ejemplo:
+{```Bucle FOR```} :: Permite recorrer un rango de valores y ejecutar un bloque de código para cada valor. Por ejemplo:
+
 ```SQL
 FOR variable IN rango DO
     -- acciones a ejecutar para cada valor
@@ -169,18 +160,30 @@ Un procedimiento se crea con la sentencia ```CREATE PROCEDURE``` y se invoca con
 ### **Parámetros de entrada, salida y entrada/salida**
 En los procedimientos podemos tener tres tipos de palabras clave que definimos antes del parametro:
 
-```IN:``` Parámetros que no cambian su valor. Se considera paso por valor.
-```OUT:``` Estos parámetros pueden cambiar su valor dentro del procedimiento. En programación sería equivalente al paso por referencia.
-```INOUT:``` Combinación de los tipos IN y OUT que nos permite modificar la variable a nuestro antojo.
+{```IN```} :: Parámetros que no cambian su valor. Se considera paso por valor.
+{```OUT```} :: Estos parámetros pueden cambiar su valor dentro del procedimiento. En programación sería equivalente al paso por referencia.
+{```INOUT```} :: Combinación de los tipos IN y OUT que nos permite modificar la variable a nuestro antojo.
 
 ### **Sintaxis**
 ```SQL
 DELIMITER #
-CREATE PROCEDURE nombre_metodo(par*)
+CREATE PROCEDURE nombre_metodo(parametro?)
 BEGIN
-    [CONSULTA]
+    *lo que hace el metodo;* 
 END#
 ```
+
+* Para asignar una nueva variable usaremos: ```DECLARE nombre_var```.
+* Para asignar un valor a una variable usaremos podemos usar ```SET nombre_var``` o ```TIPO_DATO DEFAULT valor```.
+
+#### Ejemplo de creación de una variable con ```DEFAULT```
+```SQL
+CREATE PROCEDURE ejemplo_txt()
+    BEGIN
+        DECLARE var INT DEFAULT 12345;
+    END
+```
+
 ### **Ejemplo de procedimiento**
 ```SQL
 DELIMITER $$
@@ -190,8 +193,7 @@ BEGIN
         	SET precioPrd = (SELECT precio FROM producto WHERE id_producto = id);
     END IF;
     
-    UPDATE producto SET precio = precioPrd
-    WHERE id_producto = id;
+    UPDATE producto SET precio = precioPrd WHERE id_producto = id; --el return de SQL
 END$$
 ```
 *Llamamos al procedimiento...*
@@ -208,14 +210,14 @@ PRECIO DESPUÉS DE LA MODIFICACION:
 ![image.png](https://i.gyazo.com/f5ec82ea2de7cbf32c3ebd5660d434bc.png)
 ![image.png](https://i.gyazo.com/15c48202bb469fb66dc06e1e60c5573b.png)
 
-# 💠Indices💠
+# 💠Índices💠
 Un indice es una estructura de base de datos que permite realizar busquedas o consultas con mayor rapidez. Existen diferentes tipos de índices y diferentes formas de implementarlos en nuestra BDD.
 
 ## **Tipos de índices**
 
-* Índices de clave primaria. Identifican de forma única una fila dentro de una tabla y no admiten valores nulos. Hacen uso de la palabra clave: ```PRIMARY KEY```
-* Índices únicos. Garantiza que los valores de una columna son únicos. Son similares a los índices de clave primaria, pero permiten valores nulos. Hacen uso de la palabra clave: ```UNIQUE```
-* Índices compuestos. Se forman con varias columnas y permiten valores nulos.
+* ```Índices de clave primaria.``` Identifican de forma única una fila dentro de una tabla y no admiten valores nulos. Hacen uso de la palabra clave: ```PRIMARY KEY```
+* ```Índices únicos.``` Garantiza que los valores de una columna son únicos. Son similares a los índices de clave primaria, pero permiten valores nulos. Hacen uso de la palabra clave: ```UNIQUE```
+* ```Índices compuestos.``` Se forman con varias columnas y permiten valores nulos.
 
 ### **Creación de índices al crear la tabla**
 
@@ -375,4 +377,78 @@ SELECT * FROM resumen_pedido;
 
 # Ejemplo completo de ```TRIGGER``` <a name="trigger"></a>
 
-*Un trigger que contenga todo en una tabla con un ENUM['DELETE','INSERT','UPDATE']*
+Vamos a crear un ```TRIGGER``` que sea capaz de registrar los ascensos/descensos de los empleados. 
+
+Para el ejemplo usaremos la base de datos de ```JARDINERIA``` y modificaremos la tabla empleado para que tenga 2 columnas adicionales: ```comentarios``` y ```fecha de modificación```.
+
+### Modificación de la tabla
+*Añadimos la tabla de comentarios*
+```SQL
+ALTER TABLE empleado ADD COLUMN comentarios TEXT NULL;
+```
+
+*Añadimos la tabla de fecha_mod*
+```SQL
+ALTER TABLE empleado ADD COLUMN fecha_mod DATE NULL;
+```
+![modificacionesJardineria1](https://i.gyazo.com/85d59d1c0cdc16efe2d7562ee5984c84.png)
+
+### Creamos el trigger
+
+```SQL
+DELIMITER $$
+CREATE TRIGGER ver_ascensos
+BEFORE UPDATE ON empleado FOR EACH ROW
+BEGIN
+    IF OLD.PUESTO != NEW.puesto THEN
+        IF NEW.puesto = 'Representante Ventas' THEN
+                SET NEW.comentarios = 'El empleado ha sido asignado a ser Representante de ventas';
+                SET NEW.fecha_mod = CURRENT_DATE();
+            
+        ELSEIF NEW.puesto = 'Secretaria' THEN
+                SET NEW.comentarios = 'El empleado ha sido asignado a ser Secretaria';
+                SET NEW.fecha_mod = CURRENT_DATE();
+            
+        ELSEIF NEW.puesto = 'Director Oficina' THEN
+                SET NEW.comentarios = 'El empleado ha sido asignado a ser Director Oficina';
+                SET NEW.fecha_mod = CURRENT_DATE();
+
+        ELSEIF NEW.puesto = 'Subdirector Marketing' THEN
+                SET NEW.comentarios = 'El empleado ha sido asignado a ser Subdirector Marketing';
+                SET NEW.fecha_mod = CURRENT_DATE();
+
+        ELSEIF NEW.puesto = 'Subdirector Ventas' THEN
+                SET NEW.comentarios = 'El empleado ha sido asignado a ser Subdirector ventas';
+                SET NEW.fecha_mod = CURRENT_DATE();
+            
+            ELSE
+                SET NEW.puesto = OLD.puesto; 
+                SET NEW.comentarios = 'Sin cambios';
+                SET NEW.fecha_mod = CURRENT_DATE();
+        END IF;
+    END IF;    
+END;$$
+```
+
+### Consultas de prueba
+
+*Cargo del empleado 4 antes de la modificación*
+
+![altimg](https://i.gyazo.com/35e942346e1ec6b03b913b0b62f59d90.png)
+
+
+*Cargo del **empleado 4** después de la modificación*
+
+```SQL
+UPDATE empleado SET puesto="Limpiadora" WHERE codigo_empleado = 4;
+```
+
+![alt23](https://i.gyazo.com/3be1b1c7be4580443bc99cc8e6b61c3f.png)
+
+*Cargo del **empleado 3** después de la modificación*
+
+```SQL
+UPDATE empleado SET puesto="Director Oficina" WHERE codigo_empleado = 3;
+```
+
+![asd1](https://i.gyazo.com/7f291600d215f32dfee264a13e994d6f.png)
