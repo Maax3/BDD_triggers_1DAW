@@ -1,10 +1,10 @@
 
-🔷 1. [Triggers](#🔻1.Triggers🔻)
-🔷 2. [Estructuras de Control](#estructuras-de-control) <br/>
-🔷 3. [Procedimientos](#procedimientos) <br/>
-🔷 4. [Índices](#Índices) <br/>
-🔷 5. [Vistas](#vistas) <br/>
-🔷 6. [Ejemplo Trigger](#tr) <br/>
+🔷 1. [Triggers](#🔻1.Triggers🔻) <br/>
+🔷 2. [Estructuras de Control](#2💠estructuras-de-control💠) <br/>
+🔷 3. [Procedimientos](#3💠procedimientos💠) <br/>
+🔷 4. [Índices](#4💠índices💠) <br/>
+🔷 5. [Vistas](#5💠vistas💠) <br/>
+🔷 6. [Ejemplo Trigger](#6💠ejemplo-completo-de-trigger-💠) <br/>
 
 
 
