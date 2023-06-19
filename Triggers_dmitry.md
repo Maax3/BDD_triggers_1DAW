@@ -1,31 +1,31 @@
 
-- [🔻1.Triggers🔻](#1triggers)
-    - [**1.2 Casos de uso**](#12-casos-de-uso)
-    - [**1.3 Sintaxis**](#13-sintaxis)
-    - [**1.4 SENTENCIAS ```OLD``` \&\& ```NEW```**](#14-sentencias-old--new)
-    - [**Ejemplo de trigger con ```INSERT```**](#ejemplo-de-trigger-con-insert)
-    - [**Ejemplo de trigger con ```UPDATE```**](#ejemplo-de-trigger-con-update)
-    - [**1.5 Instrucciones adicionales**](#15-instrucciones-adicionales)
-- [2.💠Estructuras de Control💠](#2estructuras-de-control)
-    - [2.1 Sintaxis](#21-sintaxis)
-- [3.💠Procedimientos💠](#3procedimientos)
-    - [**3.1 Parámetros de entrada, salida y entrada/salida**](#31-parámetros-de-entrada-salida-y-entradasalida)
-    - [**3.2 Sintaxis**](#32-sintaxis)
-    - [3.3 Ejemplo de creación de una variable con ```DEFAULT```](#33-ejemplo-de-creación-de-una-variable-con-default)
-    - [**3.4 Ejemplo de procedimiento**](#34-ejemplo-de-procedimiento)
-- [4.💠Índices💠](#4índices)
-    - [**4.1 Tipos de índices**](#41-tipos-de-índices)
-    - [**4.2 Creación de índices al crear la tabla**](#42-creación-de-índices-al-crear-la-tabla)
-    - [**4.3 Creación de índices después de crear la tabla**](#43-creación-de-índices-después-de-crear-la-tabla)
-    - [**4.4 Instrucciones adicionales**](#44-instrucciones-adicionales)
-- [5.💠Vistas💠](#5vistas)
-    - [5.1 Sintaxis](#51-sintaxis)
-    - [**5.2 ¿Cual es la ventaja de usar vistas?**](#52-cual-es-la-ventaja-de-usar-vistas)
-    - [**5.3 Ejemplos**](#53-ejemplos)
-- [6.💠Ejemplo completo de ```TRIGGER``` 💠](#6ejemplo-completo-de-trigger-)
-    - [6.1 Modificación de la tabla](#61-modificación-de-la-tabla)
-    - [6.2 Creamos el trigger](#62-creamos-el-trigger)
-    - [6.3 Consultas de prueba](#63-consultas-de-prueba)
+1. [Triggers](#🔻1.Triggers🔻) 
+    * [Casos de uso](#12-casos-de-uso)
+    * [Sintaxis](#13-sintaxis)
+    * [Sentencias OLD/NEW](#14-sentencias-old--new)
+    * [Ejemplo 1](#ejemplo-de-trigger-con-insert)
+    * [Ejemplo 2](#ejemplo-de-trigger-con-update)
+    * [Instrucciones adicionales](#15-instrucciones-adicionales)
+2. [Estructuras de Control](#2💠estructuras-de-control💠)
+   * [Sintaxis](#21-sintaxis)
+3. [Procedimientos](#3💠procedimientos💠)
+   * [Parametros](#31-parámetros-de-entrada-salida-y-entradasalida)
+   * [Sintaxis](#32-sintaxis)
+   * [Ejemplo 1](#33-ejemplo-de-creación-de-una-variable-con-default)
+   * [Ejemplo 2](#34-ejemplo-de-procedimiento)
+4. [Índices](#4💠índices💠)
+    * [Tipos](#41-tipos-de-índices)
+    * [Modos de crear índices 1](#42-creación-de-índices-al-crear-la-tabla)
+    * [Modos de crear índices 2](#43-creación-de-índices-después-de-crear-la-tabla)
+    * [Instrucciones adicionales](#44-instrucciones-adicionales)
+5. [Vistas](#5💠vistas💠)
+    * [Sintaxis](#51-sintaxis)
+    * [Ventajas de las vistas](#52-¿cual-es-la-ventaja-de-usar-vistas)
+    * [Ejemplos](#53-ejemplos)
+6. [Ejemplo Trigger](#6💠ejemplo-completo-de-trigger-💠)
+    * [Creacion de nuevas columnas](#61-modificación-de-la-tabla)
+    * [Creacion del trigger](#62-creamos-el-trigger)
+    * [Pruebas](#63-consultas-de-prueba)
 
 
 
@@ -103,9 +103,11 @@ INSERT INTO `fabricante`(`nombre`) VALUES ('Apple');
 
 ###  **Ejemplo de trigger con ```UPDATE```**
 
-En este ejemplo se creará una tabla secundaria para almacenar los posibles cambios sobre el ```nombre``` y el ```precio``` de la tabla ```producto```. Cada vez que alguien realice una sentencia ```UPDATE``` sobre la tabla productos se guardará el nombre y precio antiguos del producto, el nombre y precio nuevos, quién hizo los cambios y cuando. 
+En este ejemplo se creará una tabla secundaria para almacenar los posibles cambios sobre el ```nombre``` y el ```precio``` de la tabla ```producto```. 
 
-*Se crea la tabla auxiliar*
+Cada vez que alguien realice una sentencia ```UPDATE``` sobre la tabla productos se guardará el nombre y precio antiguos del producto, el nombre y precio nuevos, quién hizo los cambios y cuando.
+
+*Creamos la tabla auxiliar*
 
 ```SQL
 CREATE TABLE info_producto (
@@ -117,8 +119,7 @@ CREATE TABLE info_producto (
     fecha date
 );
 ```
-*Se crea el trigger*
-
+*Creamos el trigger*
 ```SQL
 DELIMITER #
 CREATE TRIGGER info_producto_BU
@@ -129,9 +130,7 @@ BEGIN
     VALUES (OLD.nombre,OLD.precio,NEW.nombre,NEW.precio,CURRENT_USER(),CURRENT_DATE());
 END#
 ```
-
-*Se hace un update para comprobar que funciona*
-
+*Realizamos cambios para comprobar que funciona*
 ```SQL
 UPDATE producto SET precio=500 WHERE id_producto = 9;
 ```
@@ -217,6 +216,7 @@ CREATE PROCEDURE ejemplo_txt()
 ```
 
 ### **3.4 Ejemplo de procedimiento**
+
 En el siguiente ejemplo se crea un procedimiento que permite actualizar el precio de un producto determinado. Recibe por ```parametro``` el ```precio nuevo``` y la ```ID``` del producto que se quiere modificar. 
 
 Además, se estableció una condición para que, en caso de que se introduzca un precio negativo, se haga una consulta interna y se re-asigne la variable al precio original del producto.
