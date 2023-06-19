@@ -139,6 +139,7 @@ UPDATE producto SET precio=500 WHERE id_producto = 9;
 ###  **1.5 Instrucciones adicionales**
 * ```SHOW TRIGGERS```: muestra los triggers de la BDD.
 * ```DROP TRIGGER```nombre_trigger: elimina el trigger.
+
 *La instrucción ```ALTER TRIGGER``` no existe, si se quiere modificar un trigger se debe borrar y crear de nuevo.*
 
 # 2.💠Estructuras de Control💠
@@ -192,7 +193,9 @@ Un procedimiento se crea con la sentencia ```CREATE PROCEDURE``` y se invoca con
 En los procedimientos podemos tener tres tipos de palabras clave que definimos antes del párametro:
 
 {```IN```} :: Parámetros que no cambian su valor. Se considera paso por valor.
+
 {```OUT```} :: Estos parámetros pueden cambiar su valor dentro del procedimiento. En programación sería equivalente al paso por referencia.
+
 {```INOUT```} :: Combinación de los tipos IN y OUT que nos permite modificar la variable a nuestro antojo.
 
 ### **3.2 Sintaxis**
